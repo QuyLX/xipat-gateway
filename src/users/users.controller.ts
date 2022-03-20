@@ -14,10 +14,10 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/common/guard/auth.guard';
-import { RolesGuard } from 'src/common/guard/roles.guard';
-import { Roles } from 'src/common/decorator/roles.decorator';
-import { LoggingInterceptor } from 'src/common/interceptor/logging.interceptor';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { LoggingInterceptor } from 'src/common/interceptors/logging.interceptor';
 
 @UseInterceptors(LoggingInterceptor)
 @Controller('users')
