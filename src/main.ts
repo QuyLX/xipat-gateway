@@ -1,13 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { VersioningType, VERSION_NEUTRAL } from '@nestjs/common';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { LoggingService } from './common/helpers/logging/logging.service';
 import helmet from 'helmet';
 import * as csurf from 'csurf';
 import * as compression from 'compression';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const port = process.env.PORT;
   const logger = new LoggingService();
   const whitelist = ['example.com', 'api.example.com'];
@@ -23,7 +27,15 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   app.use(helmet());
-  app.use(csurf());
+  app.use(cookieParser());
+  app.use(
+    session({
+      secret: 'my-secret',
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
+  // app.use(csurf());
   app.use(compression());
   app.useLogger(logger);
   app.enableVersioning({
