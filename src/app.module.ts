@@ -9,7 +9,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as redisStore from 'cache-manager-redis-store';
 import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './configs';
@@ -25,6 +24,7 @@ import { CourierNotFoundModule } from './modules/courier-not-found/courier-not-f
 import { AlertModule } from './modules/alert/alert.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -58,16 +58,6 @@ import { ScheduleModule } from '@nestjs/schedule';
         };
       },
     }),
-    CacheModule.registerAsync({
-      useFactory: () => {
-        return {
-          store: redisStore,
-          host: 'localhost',
-          port: 6379,
-          ttl: 60 * 3600 * 1000,
-        };
-      },
-    }),
     BullModule.forRoot({
       redis: {
         host: 'localhost',
@@ -85,6 +75,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     UserModule,
     AlertModule,
     TasksModule,
+    RedisModule,
   ],
   providers: [
     CourierNotFoundService,
