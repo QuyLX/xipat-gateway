@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -19,12 +19,13 @@ import { DictionaryModule } from './modules/dictionary/dictionary.module';
 import { ServerModule } from './modules/server/server.module';
 import { UserModule } from './modules/user/user.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
-import { CourierNotFoundService } from './modules/courier-not-found/courier-not-found.service';
 import { CourierNotFoundModule } from './modules/courier-not-found/courier-not-found.module';
 import { AlertModule } from './modules/alert/alert.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { RedisModule } from './redis/redis.module';
+import { RedisModule } from './common/redis/redis.module';
+import { LicenseModule } from './modules/license/license.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { RedisModule } from './redis/redis.module';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
+          logging: true,
         };
       },
     }),
@@ -76,9 +78,10 @@ import { RedisModule } from './redis/redis.module';
     AlertModule,
     TasksModule,
     RedisModule,
+    LicenseModule,
+    MailModule,
   ],
   providers: [
-    CourierNotFoundService,
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({

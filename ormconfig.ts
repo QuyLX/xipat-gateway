@@ -1,8 +1,7 @@
-
 const config = {
   type: 'mysql',
   database: 'gateway',
-  entities: ['./src/modules/user/entities/user.entity.ts'],
+  entities: ['src/modules/**/*.entity.ts'],
   synchronize: false,
   host: 'localhost',
   username: 'root',
@@ -16,6 +15,7 @@ const config = {
   cli: {
     migrationsDir: 'src/database/migrations',
   },
+  logging: true,
 };
 
 export default config;

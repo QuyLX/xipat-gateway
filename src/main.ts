@@ -8,6 +8,7 @@ import * as csurf from 'csurf';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import { Cluster } from './cluster';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,4 +46,5 @@ async function bootstrap() {
   await app.listen(port);
   logger.log(`Application start in ${port}`, 'Global app');
 }
-bootstrap();
+// use 4 workers
+Cluster.register(4, bootstrap);

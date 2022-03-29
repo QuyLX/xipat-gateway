@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { DictionaryService } from './dictionary.service';
 import { CreateDictionaryDto } from './dto/create-dictionary.dto';
 import { UpdateDictionaryDto } from './dto/update-dictionary.dto';
@@ -13,8 +22,10 @@ export class DictionaryController {
   }
 
   @Get()
-  findAll() {
-    return this.dictionaryService.findAll();
+  findAll(@Query('carrier_name') carrier_name: string) {
+    console.log(carrier_name);
+
+    return this.dictionaryService.findAll(carrier_name);
   }
 
   @Get(':id')
@@ -23,7 +34,10 @@ export class DictionaryController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDictionaryDto: UpdateDictionaryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDictionaryDto: UpdateDictionaryDto,
+  ) {
     return this.dictionaryService.update(+id, updateDictionaryDto);
   }
 

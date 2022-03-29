@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
 import { UserService } from 'src/modules/user/user.service';
-
+import { AuthCredentialsDto } from './dto/auth.dto';
+import * as bcrypt from 'bcrypt';
+import { SigninDto } from './dto/signin.dto';
+import { JwtPayload } from './interfaces/jwt.interface';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,21 +14,40 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(3);
-    // if (user && user.password === pass) {
-    //   const { password, ...result } = user;
-    //   return result;
-    // }
-    return null;
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.userService.findOne(email);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    } else {
+      throw new UnauthorizedException('Your password incomplete!');
+    }
   }
 
-  async login(user: any) {
-    console.log(user);
+  async verifyPayload(payload: JwtPayload): Promise<User> {
+    let user: User;
+    const { email } = payload;
+    try {
+      user = await this.userService.findOne(email);
+    } catch (error) {
+      throw new UnauthorizedException(
+        `There isn't any user with email: ${payload.email}`,
+      );
+    }
+    return user;
+  }
 
-    const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
+  async signup(body: AuthCredentialsDto) {
+    return this.userService.create(body);
+  }
+
+  async signin(user: SigninDto) {
+    const { email } = user;
+    const payload: JwtPayload = {
+      email,
     };
+
+    const accessToken: string = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
 }

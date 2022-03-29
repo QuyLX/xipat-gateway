@@ -1,15 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CourierService } from './courier.service';
 import { CreateCourierDto } from './dto/create-courier.dto';
 import { UpdateCourierDto } from './dto/update-courier.dto';
+import { Serialize } from 'src/common/interceptors/serialize.interceptor';
+import { CourierDto } from './dto/courier.dto';
+import { DectectCourierDto } from './dto/detect-courier.dto';
 
 @Controller('courier')
+@Serialize(CourierDto)
 export class CourierController {
   constructor(private readonly courierService: CourierService) {}
 
   @Post()
   create(@Body() createCourierDto: CreateCourierDto) {
     return this.courierService.create(createCourierDto);
+  }
+
+  @Post('/detect-carrier')
+  detectCarrier(@Body() detectPayload: DectectCourierDto) {
+    return this.courierService.detectCourier(detectPayload);
   }
 
   @Get()
@@ -31,4 +48,7 @@ export class CourierController {
   remove(@Param('id') id: string) {
     return this.courierService.remove(+id);
   }
+}
+function ApiResponse(arg0: { status: number; description: string }) {
+  throw new Error('Function not implemented.');
 }

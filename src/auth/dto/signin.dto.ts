@@ -1,9 +1,7 @@
-import { IsString, IsEmail } from 'class-validator';
+import { IsOptional } from 'class-validator';
+import { AuthCredentialsDto } from './auth.dto';
 
-export class SigninDto {
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  password: string;
+export class SigninDto extends AuthCredentialsDto {
+  @IsOptional()
+  username: string;
 }
