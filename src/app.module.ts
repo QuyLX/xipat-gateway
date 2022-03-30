@@ -3,11 +3,10 @@ import {
   Module,
   NestModule,
   ValidationPipe,
-  CacheModule,
 } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE, RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -21,11 +20,15 @@ import { UserModule } from './modules/user/user.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
 import { CourierNotFoundModule } from './modules/courier-not-found/courier-not-found.module';
 import { AlertModule } from './modules/alert/alert.module';
-import { TasksModule } from './modules/tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { RedisModule } from './common/redis/redis.module';
+import { RedisModule } from './redis/redis.module';
 import { LicenseModule } from './modules/license/license.module';
-import { MailModule } from './modules/mail/mail.module';
+import { MailModule } from './mail/mail.module';
+import { AllExceptionsFilter } from './exceptions/base-exceoption.filter';
+import { LogModule } from './log/log.module';
+import { HealthModule } from './health/health.module';
+import { UploadFileModule } from './upload-file/upload-file.module';
+import DatabaseLogger from './common/databaseLogger';
 
 @Module({
   imports: [
@@ -57,13 +60,14 @@ import { MailModule } from './modules/mail/mail.module';
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
           logging: true,
+          logger: new DatabaseLogger(),
         };
       },
     }),
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
-        port: 6379,
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT),
       },
     }),
     ScheduleModule.forRoot(),
@@ -76,10 +80,23 @@ import { MailModule } from './modules/mail/mail.module';
     CourierNotFoundModule,
     UserModule,
     AlertModule,
-    TasksModule,
     RedisModule,
     LicenseModule,
     MailModule,
+    RouterModule.register([
+      {
+        path: 'api',
+        children: [
+          {
+            path: 'user',
+            module: UserModule,
+          },
+        ],
+      },
+    ]),
+    LogModule,
+    HealthModule,
+    UploadFileModule,
   ],
   providers: [
     {
@@ -87,6 +104,10 @@ import { MailModule } from './modules/mail/mail.module';
       useValue: new ValidationPipe({
         whitelist: true,
       }),
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
     },
   ],
 })

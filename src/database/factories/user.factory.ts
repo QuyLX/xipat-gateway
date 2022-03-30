@@ -6,7 +6,5 @@ define(User, () => {
   user.username = 'admin';
   user.email = 'contact@omegatheme.com';
   user.password = '111111';
-  console.log(user);
-  
   return user;
 });

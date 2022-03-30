@@ -6,7 +6,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ThrottlerBehindProxyGuard } from 'src/common/guards/throttler-behind-proxy.guard';
+import { ThrottlerBehindProxyGuard } from 'src/guards/throttler-behind-proxy.guard';
 import { CourierNotFoundService } from '../courier-not-found/courier-not-found.service';
 import { DictionaryService } from '../dictionary/dictionary.service';
 import { TrackingMultipleDto } from './dtos/tracking-multiple.dto';

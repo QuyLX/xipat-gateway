@@ -10,7 +10,7 @@ import {
 import { CourierService } from './courier.service';
 import { CreateCourierDto } from './dto/create-courier.dto';
 import { UpdateCourierDto } from './dto/update-courier.dto';
-import { Serialize } from 'src/common/interceptors/serialize.interceptor';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CourierDto } from './dto/courier.dto';
 import { DectectCourierDto } from './dto/detect-courier.dto';
 

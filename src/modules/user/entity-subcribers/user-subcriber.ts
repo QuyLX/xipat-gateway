@@ -1,3 +1,4 @@
+import { generateHash } from 'src/common/utils';
 import {
   Connection,
   EntitySubscriberInterface,
@@ -17,6 +18,8 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   }
 
   beforeInsert(event: InsertEvent<User>) {
-    console.log(`BEFORE USER INSERTED: `, event.entity);
+    if (event.entity.password) {
+      event.entity.password = generateHash(event.entity.password);
+    }
   }
 }
