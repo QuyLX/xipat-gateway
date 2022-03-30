@@ -13,16 +13,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './configs';
 import { AuthModule } from './auth/auth.module';
 import { AuthorModule } from './author/author.module';
-import { CourierModule } from './modules/courier/courier.module';
-import { DictionaryModule } from './modules/dictionary/dictionary.module';
-import { ServerModule } from './modules/server/server.module';
-import { UserModule } from './modules/user/user.module';
-import { TrackingModule } from './modules/tracking/tracking.module';
-import { CourierNotFoundModule } from './modules/courier-not-found/courier-not-found.module';
-import { AlertModule } from './modules/alert/alert.module';
+import { CourierModule } from './components/courier/courier.module';
+import { DictionaryModule } from './components/dictionary/dictionary.module';
+import { ServerModule } from './components/server/server.module';
+import { UserModule } from './components/user/user.module';
+import { TrackingModule } from './components/tracking/tracking.module';
+import { CourierNotFoundModule } from './components/courier-not-found/courier-not-found.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RedisModule } from './redis/redis.module';
-import { LicenseModule } from './modules/license/license.module';
+import { LicenseModule } from './components/license/license.module';
 import { MailModule } from './mail/mail.module';
 import { AllExceptionsFilter } from './exceptions/base-exceoption.filter';
 import { LogModule } from './log/log.module';
@@ -79,7 +78,6 @@ import DatabaseLogger from './common/databaseLogger';
     TrackingModule,
     CourierNotFoundModule,
     UserModule,
-    AlertModule,
     RedisModule,
     LicenseModule,
     MailModule,

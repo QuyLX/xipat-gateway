@@ -3,7 +3,7 @@ import { NestMiddleware, HttpStatus, Injectable } from '@nestjs/common';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { UserService } from 'src/modules/user/user.service';
+import { UserService } from 'src/components/user/user.service';
 import { ConfigService } from '@nestjs/config';
 
 declare global {

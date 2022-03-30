@@ -14,7 +14,7 @@ import { UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthUser } from './auth.decorator';
-import { User } from 'src/modules/user/entities/user.entity';
+import { User } from 'src/components/user/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
