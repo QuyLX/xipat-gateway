@@ -1,35 +1,20 @@
-import { Controller, Get } from '@nestjs/common';
-import { Transport } from '@nestjs/microservices';
-import {
-  HealthCheckService,
-  HealthCheck,
-  TypeOrmHealthIndicator,
-  HttpHealthIndicator,
-  MicroserviceHealthIndicator,
-} from '@nestjs/terminus';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { HealthCheck } from '@nestjs/terminus';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/author/decorators/role.decorator';
+import { Role } from 'src/author/enums/role.enum';
+import { RolesGuard } from 'src/author/guards/role-base-access.guard';
+import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {
-  constructor(
-    private healthCheckService: HealthCheckService,
-    private typeOrmHealthIndicator: TypeOrmHealthIndicator,
-    private http: HttpHealthIndicator,
-    private microservice: MicroserviceHealthIndicator,
-  ) {}
+  constructor(private healthCheckService: HealthService) {}
 
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   @HealthCheck()
-  check() {
-    return this.healthCheckService.check([
-      () => this.typeOrmHealthIndicator.pingCheck('database'),
-      () => this.http.pingCheck('nestjs-docs', 'https://docs.nestjs.com'),
-      () =>
-        this.microservice.pingCheck('redis', {
-          transport: Transport.REDIS,
-          options: {
-            url: 'localhost:6379',
-          },
-        }),
-    ]);
+  async checkService() {
+    await this.healthCheckService.check();
   }
 }

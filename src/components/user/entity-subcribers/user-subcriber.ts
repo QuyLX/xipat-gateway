@@ -1,4 +1,5 @@
 import { generateHash } from 'src/common/utils';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Connection,
   EntitySubscriberInterface,
@@ -21,5 +22,6 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     if (event.entity.password) {
       event.entity.password = generateHash(event.entity.password);
     }
+    event.entity.clientid = uuidv4();
   }
 }

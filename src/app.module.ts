@@ -21,20 +21,21 @@ import { TrackingModule } from './components/tracking/tracking.module';
 import { CourierNotFoundModule } from './components/courier-not-found/courier-not-found.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RedisModule } from './redis/redis.module';
-import { LicenseModule } from './components/license/license.module';
 import { MailModule } from './mail/mail.module';
 import { AllExceptionsFilter } from './exceptions/base-exceoption.filter';
 import { LogModule } from './log/log.module';
 import { HealthModule } from './health/health.module';
 import { UploadFileModule } from './upload-file/upload-file.module';
+import { TaskModule } from './tasks/task.module';
+import { MonitorModule } from './components/monitor/monitor.module';
 import DatabaseLogger from './common/databaseLogger';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
-      exclude: ['/api*'],
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'client'),
+    //   exclude: ['/api*'],
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [`.env.${process.env.STAGE}`],
@@ -79,22 +80,23 @@ import DatabaseLogger from './common/databaseLogger';
     CourierNotFoundModule,
     UserModule,
     RedisModule,
-    LicenseModule,
     MailModule,
-    RouterModule.register([
-      {
-        path: 'api',
-        children: [
-          {
-            path: 'user',
-            module: UserModule,
-          },
-        ],
-      },
-    ]),
+    // RouterModule.register([
+    //   {
+    //     path: 'api',
+    //     children: [
+    //       {
+    //         path: 'user',
+    //         module: UserModule,
+    //       },
+    //     ],
+    //   },
+    // ]),
     LogModule,
     HealthModule,
     UploadFileModule,
+    TaskModule,
+    MonitorModule,
   ],
   providers: [
     {
@@ -103,10 +105,10 @@ import DatabaseLogger from './common/databaseLogger';
         whitelist: true,
       }),
     },
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: AllExceptionsFilter,
+    // },
   ],
 })
 export class AppModule implements NestModule {

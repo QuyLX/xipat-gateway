@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LicenseService } from './license.service';
+import { TaskService } from './task.service';
 
-describe('LicenseService', () => {
-  let service: LicenseService;
+describe('TaskService', () => {
+  let service: TaskService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LicenseService],
+      providers: [TaskService],
     }).compile();
 
-    service = module.get<LicenseService>(LicenseService);
+    service = module.get<TaskService>(TaskService);
   });
 
   it('should be defined', () => {

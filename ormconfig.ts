@@ -2,12 +2,12 @@ require('dotenv').config();
 
 var dbConfig = {
   type: 'mysql',
-  synchronize: false,
+  synchronize: true,
   logging: true,
-  database: process.env.DB_DATABASE,
-  host: process.env.DB_HOST,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
+  database: 'gateway',
+  host: 'localhost',
+  username: 'root',
+  password: '',
 };
 
 switch (process.env.NODE_ENV) {

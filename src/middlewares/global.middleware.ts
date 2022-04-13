@@ -32,6 +32,9 @@ export const loadGlobalMiddleWare = (app: INestApplication): void => {
   // app.use(csurf());
   app.use(compression());
   app.useLogger(logger);
+  app.setGlobalPrefix('api', {
+    exclude: ['auth'],
+  });
   app.enableVersioning({
     defaultVersion: ['1', '2'],
     type: VersioningType.URI,

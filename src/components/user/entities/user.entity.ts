@@ -29,4 +29,10 @@ export class User {
     default: Plan.Basic,
   })
   plan: Plan;
+
+  @Column()
+  apikey: string;
+
+  @Column()
+  clientid: string;
 }

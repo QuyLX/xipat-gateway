@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Post,
+  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { ThrottlerBehindProxyGuard } from 'src/guards/throttler-behind-proxy.guard';
@@ -12,6 +13,7 @@ import { DictionaryService } from '../dictionary/dictionary.service';
 import { TrackingMultipleDto } from './dtos/tracking-multiple.dto';
 import { TrackingSingleDto } from './dtos/tracking-single.dto';
 import { TrackingService } from './tracking.service';
+import { CountGuard } from 'src/guards/countRequest.guard';
 
 @Controller('tracking')
 export class TrackingController {
@@ -20,7 +22,7 @@ export class TrackingController {
     private trackingService: TrackingService,
     private courierNotfoundService: CourierNotFoundService,
   ) {}
-  s;
+
   @Post('/single')
   async getSingleTrackingInfo(@Body() data: TrackingSingleDto) {
     const { carrier_name, tracking_number } = data;
@@ -37,14 +39,16 @@ export class TrackingController {
   getMultipleTrackingInfo(@Body() data: TrackingMultipleDto) {
     return 'sdfds';
   }
-
+  @SetMetadata('test', 'hihi')
   @UseGuards(ThrottlerBehindProxyGuard)
   @Get('/test')
-  testRateLimit() {}
+  testRateLimit() {
+    return 'hi there!';
+  }
 
+  @UseGuards(CountGuard)
   @Get('/test2')
-  test2() {}
-}
-function ApiResponse(arg0: { status: number; description: string }) {
-  throw new Error('Function not implemented.');
+  test2() {
+    return 'hihi';
+  }
 }

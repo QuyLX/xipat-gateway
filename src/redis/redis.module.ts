@@ -21,13 +21,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           store: redisStore,
           host: configService.get('REDIS_HOST'),
           port: configService.get('REDIS_PORT'),
-          ttl: 60 * 3600 * 1000,
+          ttl: 1000
         };
       },
     }),
   ],
   providers: [RedisService],
-  exports: [CacheModule, RedisService],
+  exports: [RedisModule, RedisService],
 })
 export class RedisModule {
   constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}

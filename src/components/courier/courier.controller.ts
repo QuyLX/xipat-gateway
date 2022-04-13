@@ -49,6 +49,3 @@ export class CourierController {
     return this.courierService.remove(+id);
   }
 }
-function ApiResponse(arg0: { status: number; description: string }) {
-  throw new Error('Function not implemented.');
-}

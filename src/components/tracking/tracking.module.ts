@@ -5,18 +5,27 @@ import { DictionaryModule } from '../dictionary/dictionary.module';
 import { CourierNotFoundModule } from '../courier-not-found/courier-not-found.module';
 import { HttpModule } from '@nestjs/axios';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { RedisModule } from 'src/redis/redis.module';
+import { RedisService } from 'src/redis/redis.service';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
-
+import { ThrottlerBehindProxyGuard } from 'src/guards/throttler-behind-proxy.guard';
 @Module({
   imports: [
     DictionaryModule,
     CourierNotFoundModule,
-    HttpModule,
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-      storage: new ThrottlerStorageRedisService(),
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: 5000,
+      }),
     }),
+    ThrottlerModule.forRootAsync({
+      imports: [RedisModule],
+      inject: [RedisService],
+      useFactory: (redisService: RedisService) => ({
+        storage: redisService,
+      }),
+    }),
+    RedisModule,
   ],
   providers: [TrackingService],
   controllers: [TrackingController],
