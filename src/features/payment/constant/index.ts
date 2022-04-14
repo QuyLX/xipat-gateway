@@ -1,0 +1,1 @@
+export const paypalUrl: string = 'https://api-m.sandbox.paypal.com';

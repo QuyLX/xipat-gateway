@@ -29,6 +29,7 @@ import { UploadFileModule } from './upload-file/upload-file.module';
 import { TaskModule } from './tasks/task.module';
 import { MonitorModule } from './features/monitor/monitor.module';
 import { LicenseModule } from './features/license/license.module';
+import { PaymentModule } from './features/payment/payment.module';
 import DatabaseLogger from './common/databaseLogger';
 
 @Module({
@@ -99,6 +100,7 @@ import DatabaseLogger from './common/databaseLogger';
     TaskModule,
     MonitorModule,
     LicenseModule,
+    PaymentModule,
   ],
   providers: [
     {

@@ -35,4 +35,10 @@ export class User {
 
   @Column()
   clientId: string;
+
+  @Column()
+  stripeCustomerId: string;
+
+  @Column({ nullable: true })
+  monthlySubscriptionStatus?: string;
 }

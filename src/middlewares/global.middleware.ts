@@ -5,20 +5,15 @@ import * as csurf from 'csurf';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import { ConfigService } from '@nestjs/config';
 
 export const loadGlobalMiddleWare = (app: INestApplication): void => {
   const logger = new Logger();
-  const whitelist = ['example.com', 'api.example.com'];
+  const configService = app.get(ConfigService);
+
   app.enableCors({
-    origin: function (origin, callback) {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: configService.get('FRONT_END_APP'),
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   app.use(helmet());
   app.use(cookieParser());
