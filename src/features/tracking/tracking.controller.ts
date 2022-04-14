@@ -39,8 +39,8 @@ export class TrackingController {
   getMultipleTrackingInfo(@Body() data: TrackingMultipleDto) {
     return 'sdfds';
   }
-  @SetMetadata('test', 'hihi')
-  @UseGuards(ThrottlerBehindProxyGuard)
+  // @SetMetadata('test', 'hihi')
+  // @UseGuards(ThrottlerBehindProxyGuard)
   @Get('/test')
   testRateLimit() {
     return 'hi there!';

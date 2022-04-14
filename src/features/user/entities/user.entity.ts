@@ -34,5 +34,5 @@ export class User {
   apikey: string;
 
   @Column()
-  clientid: string;
+  clientId: string;
 }

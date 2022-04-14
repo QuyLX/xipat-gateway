@@ -1,5 +1,5 @@
 import { define } from 'typeorm-seeding';
-import { User } from '../../components/user/entities/user.entity';
+import { User } from '../../features/user/entities/user.entity';
 
 define(User, () => {
   const user = new User();

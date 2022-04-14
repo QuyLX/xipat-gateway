@@ -11,12 +11,17 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LicenseService } from '../license/license.service';
 
 @Controller({
   version: ['1', '2'],
+  path: 'user',
 })
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private licenseService: LicenseService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -33,10 +38,10 @@ export class UserController {
     return 'This action returns all cats for version 2';
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.userService.findOne(id);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
@@ -46,5 +51,15 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Get('token')
+  generateToken() {
+    console.log('dda');
+
+    return this.licenseService.encode(
+      'dfdsfdsfdsfdsfdgdfgfdg',
+      '43243423432423423',
+    );
   }
 }

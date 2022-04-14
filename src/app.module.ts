@@ -13,12 +13,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './configs';
 import { AuthModule } from './auth/auth.module';
 import { AuthorModule } from './author/author.module';
-import { CourierModule } from './components/courier/courier.module';
-import { DictionaryModule } from './components/dictionary/dictionary.module';
-import { ServerModule } from './components/server/server.module';
-import { UserModule } from './components/user/user.module';
-import { TrackingModule } from './components/tracking/tracking.module';
-import { CourierNotFoundModule } from './components/courier-not-found/courier-not-found.module';
+import { CourierModule } from './features/courier/courier.module';
+import { DictionaryModule } from './features/dictionary/dictionary.module';
+import { ServerModule } from './features/server/server.module';
+import { UserModule } from './features/user/user.module';
+import { TrackingModule } from './features/tracking/tracking.module';
+import { CourierNotFoundModule } from './features/courier-not-found/courier-not-found.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RedisModule } from './redis/redis.module';
 import { MailModule } from './mail/mail.module';
@@ -27,7 +27,8 @@ import { LogModule } from './log/log.module';
 import { HealthModule } from './health/health.module';
 import { UploadFileModule } from './upload-file/upload-file.module';
 import { TaskModule } from './tasks/task.module';
-import { MonitorModule } from './components/monitor/monitor.module';
+import { MonitorModule } from './features/monitor/monitor.module';
+import { LicenseModule } from './features/license/license.module';
 import DatabaseLogger from './common/databaseLogger';
 
 @Module({
@@ -97,6 +98,7 @@ import DatabaseLogger from './common/databaseLogger';
     UploadFileModule,
     TaskModule,
     MonitorModule,
+    LicenseModule,
   ],
   providers: [
     {

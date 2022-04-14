@@ -3,7 +3,7 @@ require('dotenv').config();
 var dbConfig = {
   type: 'mysql',
   synchronize: true,
-  logging: true,
+  logging: false,
   database: 'gateway',
   host: 'localhost',
   username: 'root',

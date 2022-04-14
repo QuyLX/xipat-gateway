@@ -29,11 +29,19 @@ export class UserService {
     return this.repo.findOne({ email });
   }
 
+  findByClientId(clientId: string) {
+    return this.repo.findOne({ clientId });
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  findBySecret(clientId: string, apikey: string) {
+    return this.repo.findOne({ clientId, apikey });
   }
 }

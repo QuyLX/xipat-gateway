@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TrackingService } from './tracking.service';
 import { TrackingController } from './tracking.controller';
 import { DictionaryModule } from '../dictionary/dictionary.module';
@@ -9,6 +9,10 @@ import { RedisModule } from 'src/redis/redis.module';
 import { RedisService } from 'src/redis/redis.service';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { ThrottlerBehindProxyGuard } from 'src/guards/throttler-behind-proxy.guard';
+import { TrackingMiddleWare } from 'src/middlewares/tracking.middleware';
+import { UserModule } from '../user/user.module';
+import { LicenseModule } from '../license/license.module';
+
 @Module({
   imports: [
     DictionaryModule,
@@ -26,10 +30,16 @@ import { ThrottlerBehindProxyGuard } from 'src/guards/throttler-behind-proxy.gua
       }),
     }),
     RedisModule,
+    UserModule,
+    LicenseModule,
   ],
   providers: [TrackingService],
   controllers: [TrackingController],
 })
 export class TrackingModule {
-  configure(consumer: MiddlewareConsumer) {}
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(TrackingMiddleWare)
+      .forRoutes('v1/tracking');
+  }
 }

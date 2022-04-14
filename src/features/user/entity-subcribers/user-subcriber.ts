@@ -22,6 +22,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     if (event.entity.password) {
       event.entity.password = generateHash(event.entity.password);
     }
-    event.entity.clientid = uuidv4();
+    event.entity.clientId = uuidv4();
+    event.entity.apikey = generateHash(event.entity.email);
   }
 }

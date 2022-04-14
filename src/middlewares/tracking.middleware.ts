@@ -1,35 +1,24 @@
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { NestMiddleware, HttpStatus, Injectable } from '@nestjs/common';
-import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
 import { UserService } from 'src/features/user/user.service';
-import { ConfigService } from '@nestjs/config';
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User;
-    }
-  }
-}
-
+import { LicenseService } from 'src/features/license/license.service';
 @Injectable()
-export class AuthMiddleware implements NestMiddleware {
+export class TrackingMiddleWare implements NestMiddleware {
   constructor(
     private readonly userService: UserService,
-    private configService: ConfigService,
+    private licenseService: LicenseService,
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const authHeaders = req.headers.authorization;
+
     if (authHeaders && (authHeaders as string).split(' ')[1]) {
       const token = (authHeaders as string).split(' ')[1];
-      const decoded: any = jwt.verify(
-        token,
-        this.configService.get('JWT_SECRET'),
-      );
-      const user = await this.userService.findOne(decoded.email);
+      const decoded: string = this.licenseService.decode(token);
+      const [apikey, clientId] = decoded.split(':');
+
+      const user = await this.userService.findBySecret(clientId, apikey);
 
       if (!user) {
         throw new HttpException('User not found.', HttpStatus.UNAUTHORIZED);
