@@ -37,7 +37,7 @@ export class User {
   clientId: string;
 
   @Column()
-  stripeCustomerId: string;
+  paypalCustomerId: string;
 
   @Column({ nullable: true })
   monthlySubscriptionStatus?: string;

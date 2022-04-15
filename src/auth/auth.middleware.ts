@@ -6,13 +6,7 @@ import * as jwt from 'jsonwebtoken';
 import { UserService } from 'src/features/user/user.service';
 import { ConfigService } from '@nestjs/config';
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User;
-    }
-  }
-}
+
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

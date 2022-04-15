@@ -85,6 +85,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/bull": "^3.15.8",
     "@types/cache-manager": "^3.4.3",
+    "@types/cache-manager-ioredis": "^2.0.2",
     "@types/cache-manager-redis-store": "^2.0.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/cron": "^1.7.3",

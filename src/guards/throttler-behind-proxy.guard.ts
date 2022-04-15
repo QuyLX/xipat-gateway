@@ -1,37 +1,47 @@
-import {
-  ThrottlerException,
-  ThrottlerGuard,
-} from '@nestjs/throttler';
+import { ThrottlerException, ThrottlerGuard } from '@nestjs/throttler';
 import { ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { RedisService } from 'src/redis/redis.service';
+import { TrackingPlan } from 'src/common/constants/plan';
 
 @Injectable()
 export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   protected storageService: RedisService;
-  protected getTracker(req: Record<string, any>): string {
-    return req.ips.length ? req.ips[0] : req.ip; // individualize IP extraction to meet your own needs
-  }
-
   async handleRequest(
     context: ExecutionContext,
     limit: number,
     ttl: number,
   ): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
-    const key = this.generateKey(context, req.ip);
+    const { apikey, plan } = req.user;
+    const key = this.generateKey(context, apikey);
     const ttls = await this.storageService.getRecord(key);
-    console.log(ttls);
+    const { limit: newLimit, ttl: newTtl } = TrackingPlan[plan];
 
-    if (ttls.length >= limit) {
+    const storeCount: any = await this.storageService.get(apikey);
+
+    const payload = this.caculateCountRequest(storeCount, newLimit);
+
+    await this.storageService.set(`countService_${apikey}`, payload);
+
+    if (ttls.length >= newLimit) {
       throw new ThrottlerException();
     }
 
-    await this.storageService.addRecord(key, ttl);
+    await this.storageService.addRecord(key, newTtl);
     return true;
   }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    return this.handleRequest(context, 5, 10);
+  caculateCountRequest(storeCount: any, limit: number) {
+    let countSuccess = 1;
+    let countTotal = 1;
+    if (storeCount) {
+      countTotal = storeCount.countTotal + 1;
+      countSuccess =
+        storeCount.countSuccess < limit ? countTotal : storeCount.countSuccess;
+    }
+    return {
+      countSuccess,
+      countTotal,
+    };
   }
 }

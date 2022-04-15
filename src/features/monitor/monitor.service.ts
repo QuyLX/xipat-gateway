@@ -1,11 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMonitorDto } from './dto/create-monitor.dto';
 import { UpdateMonitorDto } from './dto/update-monitor.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Monitor } from './entities/monitor.entity';
 
 @Injectable()
 export class MonitorService {
+  constructor(@InjectRepository(Monitor) private repo: Repository<Monitor>) {}
   create(createMonitorDto: CreateMonitorDto) {
-    return 'This action adds a new monitor';
+    const { userId, requestSuccess, requestTotal } = createMonitorDto;
+
+    const record = this.repo.create({
+      userId,
+      requestSuccess,
+      requestTotal,
+    });
+
+    return this.repo.save(record);
   }
 
   findAll() {

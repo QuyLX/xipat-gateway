@@ -1,12 +1,19 @@
 import { Injectable, Inject, CACHE_MANAGER } from '@nestjs/common';
-import { ThrottlerStorage } from '@nestjs/throttler';
-import { Cache } from 'cache-manager';
+import { Cache, Store } from 'cache-manager';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
-import Redis from 'ioredis/built/Redis';
+import { RedisClient } from 'redis';
 
+interface CustomRedisStore extends Store {
+  store: {
+    getClient: () => RedisClient;
+  };
+}
 @Injectable()
 export class RedisService extends ThrottlerStorageRedisService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private redisClient: CustomRedisStore,
+  ) {
     super();
   }
 
@@ -26,15 +33,25 @@ export class RedisService extends ThrottlerStorageRedisService {
     return await this.cacheManager.store.keys();
   }
 
-  async test() {
-    // return await this.cacheManager.store.mset.
-  }
-  // async getRecord(key: string): Promise<number[]> {
-  //   return await this.getRecord(key);
-  // }
+  async countTracking(key: string): Promise<unknown> {
+    const redisClient = this.redisClient.store.getClient();
+    const countKey = `countService_${key}`;
+    const existKey = await this.get(countKey);
 
-  // async addRecord(key: string, ttl: number): Promise<void> {
-  //   await this.addRecord(key, ttl);
-  // }
+    if (existKey === 1) {
+      let endOfTheDay = new Date();
+      endOfTheDay.setUTCHours(23, 59, 59, 999);
+      let currentWhileReqTrigger = Date.now();
+
+      const ttl = Math.round(
+        (endOfTheDay.getTime() - currentWhileReqTrigger) / 1000,
+      );
+      redisClient.expire(countKey, ttl);
+    }
+
+    redisClient.incr(countKey);
+    return existKey;
+  }
+
   storage: Record<string, number[]>;
 }

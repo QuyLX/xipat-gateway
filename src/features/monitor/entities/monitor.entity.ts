@@ -6,7 +6,7 @@ export class Monitor {
   id: number;
 
   @Column()
-  apikey: string;
+  userId: number;
 
   @Column({ default: 0 })
   requestSuccess: number;

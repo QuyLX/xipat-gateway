@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { StripeService } from './stripe/stripe.service';
 import { PaypalService } from './paypal/paypal.service';
 import { PaymentController } from './payment.controller';
 import { HttpModule } from '@nestjs/axios';
@@ -11,8 +10,8 @@ import { paypalUrl } from './constant';
       baseURL: paypalUrl,
     }),
   ],
-  providers: [StripeService, PaypalService],
-  exports: [StripeService, PaypalService],
+  providers: [PaypalService],
+  exports: [PaypalService],
   controllers: [PaymentController],
 })
 export class PaymentModule {}

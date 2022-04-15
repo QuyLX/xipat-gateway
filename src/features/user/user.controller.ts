@@ -55,8 +55,6 @@ export class UserController {
 
   @Get('token')
   generateToken() {
-    console.log('dda');
-
     return this.licenseService.encode(
       'dfdsfdsfdsfdsfdgdfgfdg',
       '43243423432423423',

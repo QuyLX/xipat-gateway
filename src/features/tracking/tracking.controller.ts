@@ -4,7 +4,6 @@ import {
   Get,
   NotFoundException,
   Post,
-  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { ThrottlerBehindProxyGuard } from 'src/guards/throttler-behind-proxy.guard';
@@ -13,7 +12,7 @@ import { DictionaryService } from '../dictionary/dictionary.service';
 import { TrackingMultipleDto } from './dtos/tracking-multiple.dto';
 import { TrackingSingleDto } from './dtos/tracking-single.dto';
 import { TrackingService } from './tracking.service';
-import { CountGuard } from 'src/guards/countRequest.guard';
+import { CountTrackingGuard } from 'src/guards/count-tracking.guard';
 
 @Controller('tracking')
 export class TrackingController {
@@ -39,16 +38,9 @@ export class TrackingController {
   getMultipleTrackingInfo(@Body() data: TrackingMultipleDto) {
     return 'sdfds';
   }
-  // @SetMetadata('test', 'hihi')
-  // @UseGuards(ThrottlerBehindProxyGuard)
+  @UseGuards(CountTrackingGuard)
   @Get('/test')
   testRateLimit() {
     return 'hi there!';
-  }
-
-  @UseGuards(CountGuard)
-  @Get('/test2')
-  test2() {
-    return 'hihi';
   }
 }
